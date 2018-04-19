@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "使用Softether+openVPN绕过校园网限制"
-subject:    "伪装DNS报文"
+subtitle:    "伪装DNS报文"
 author:     “silsuer”
 header-img: "img/post-bg-digital-native.jpg"
 tags:

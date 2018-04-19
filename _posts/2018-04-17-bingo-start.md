@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "Go语言搭建简易MVC的Web框架"
-subject:    "Bingo框架的最早版本"
+subtitle:    "Bingo框架的最早版本"
 author:     “silsuer”
 header-img: "img/post-bg-kuaidi.jpg"
 tags:
