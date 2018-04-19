@@ -49,7 +49,7 @@ pages: [
      {
          title: "Bingo",
          href: "/bingo"
-     },
+     }
 ]
 
 
