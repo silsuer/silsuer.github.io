@@ -1,4 +1,5 @@
 _site
+CNAME
 node_modules
 npm-debug.log
 .DS_Store
