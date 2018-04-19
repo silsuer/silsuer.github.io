@@ -46,10 +46,10 @@ kramdown:
   input: GFM                            # use Github Flavored Markdown !important
 
 pages:[
-  {
-  title:bingo
-  url:/bingo
-  }
+     {
+         title: "Bingo",
+         href: "/bingo"
+     },
 ]
 
 
@@ -93,9 +93,10 @@ service-worker: true
 # Friends
 friends: [
 #    {
-    #     title: "Su",
-    #     href: "http://su.gallery/"
-    # },{
+#         title: "Su",
+#         href: "http://su.gallery/"
+#     },
+#     {
 #        title: "乱序",
 #        href: "http://mida.re/"
 #    },{
