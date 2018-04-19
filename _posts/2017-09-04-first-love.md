@@ -4,8 +4,7 @@ title:      "初恋"
 author:     "<转载>"
 header-img: "img/post-bg-alitrip.jpg"
 tags:
-    - PHP
-    - Laravel
+    - 矫情
 ---
 
 初恋
