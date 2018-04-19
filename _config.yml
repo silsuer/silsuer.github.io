@@ -74,7 +74,7 @@ ga_domain: huangxuan.me
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
 sidebar-about-description: "天地有正气，杂然赋流形"
-sidebar-avatar: /img/avatar-hux.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-avatar: /img/avatar.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 
