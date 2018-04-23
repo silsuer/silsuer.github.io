@@ -60,7 +60,7 @@ tags:
   
 ## 目录结构
 
-   ```go
+  ```go
     
        aceberg                                                       // 项目根目录
          |----app                                                    //开发逻辑放置的地方
@@ -85,6 +85,133 @@ tags:
                |---Tags                                              // 内置模版标签目录
          |----vendor                                                 // 第三方包
          |----composer.json                                          // composer配置文件
+  ```
+
+
+## Laradock 安装swoole扩展
+
+ 1. 把 `laradock/.env` 文件中的 `PHP_FPM_INSTALL_SWOOLE` 设置为`true`
+ 
+ 2. 在laradock目录下执行 `docker-compose up --build -d php-fpm` 等待重新构建完成
+ 
+ 3. 重启`php-fpm`即可
+ 
+ 4. 有时候会出现在phpinfo中可以看到swoole扩展，但是在使用`php -m`中看不到安装了扩展，
+ 
+   这可能是因为[cli/php-fpm/apache使用不同的php.ini配置](https://wiki.swoole.com/wiki/page/351.html)
+
+   1. 确认php.ini位置
+      
+      在命令行中输入： `php -i|grep php.ini`
+      
+      找到 `php.ino` 的绝对路径
+      
+   2. 查看对应php.ini是否有extension=swoole.so
+     
+      如果没有的话，在这里的最下面添加一行 `extension=swoole.so` 
+      
+      重启 `php-fpm` 即可（非必需）
+   
+   3. 如果还是不可以的话，报没有找到`.so`文件的错误，那么就登陆 `workspace` 容器中，手动安装: `pecl install swoole`
+     
+## 使用Nginx进行反向代理，将80端口转发到Swoole服务器所监听的端口
+
+nginx 配置文件:
+
+ ```
+    server {
+    
+        listen 80;
+        listen [::]:80;
+    
+        server_name ace.test;
+        root /var/www/Aceberg;
+        index index.html index.htm;
+    
+        location / {
+    		 proxy_redirect off;
+    		 proxy_http_version 1.1;
+             proxy_set_header Connection "keep-alive";
+    		 proxy_set_header X-Real-IP $remote_addr;
+    		  if (!-e $request_filename) {
+                proxy_pass http://172.20.0.5:35335;
+            }
+    		 
+        }
+    
+        location ~ \.php$ {
+            try_files $uri /index.php =404;
+            fastcgi_pass php-upstream;
+            fastcgi_index index.php;
+            fastcgi_buffers 16 16k;
+            fastcgi_buffer_size 32k;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            include fastcgi_params;
+        }
+    
+        location ~ /\.ht {
+            deny all;
+        }
+    
+        location /.well-known/acme-challenge/ {
+            root /var/www/letsencrypt/;
+            log_not_found off;
+        }
+    
+        error_log /var/log/nginx/app_error.log;
+        access_log /var/log/nginx/app_access.log;
+    }
+
+ ```
+ 
+ 将把端口转发到`35333`端口
+ 
+ 进入 `workspace` 控制台，php代码如下：
+ 
+   ```php
+      Class Server {
+          public function __construct()
+          {
+              echo "开启监听... \n";
+              $http = new swoole_http_server("0.0.0.0",35335);
+              $http->on("request",function ($request,$response){
+                 echo "一次访问！ \n";
+                  $response->end("<h1>Hello Swoole. #".rand(1000, 9999)."</h1>");
+              });
+              $http->start();
+          }
+      }
+      new Server();
    ```
 
+> 执行成功后，浏览器访问，会发现刷新一次浏览器会出现打印两行 "一次访问" 的情况，是因为一次是页面的请求，一次是 `/favcoin.ico` 的请求，过滤掉即可
 
+## 代码执行流程
+
+启动时，在控制台运行 `php aceberg.php` :
+
+   1. 引入 `composer` 的自动加载文件 `autoload.php`,这个函数会引入 `S-Framework.php` 文件，这个文件主要是引入各种
+   
+      需要的php文件的
+      
+   2. 在 `aceberg.php` 中的Server类的构造函数里，注册路由，注册的路由将会以数组的形式保存在内存中，
+   
+       > （由于php的数组本身就是哈希表的形式存储的，所以搜索速度很快，我们不需要自己定义路由存储的数据结构） 
+ 
+   3. 实例化 `Server` 对象，执行这个对象的 `start()` 方法，开启一个 `swoole_http_server`
+   
+当一个请求访问时：
+
+   1. 请求首先经过nginx，根据nginx中设置的代理端口，转发到这个端口上
+   
+   2. 我们的php程序监听到这个端口有数据进来，执行 `onRequest` 函数处理请求
+   
+   3. 首先判断请求的URL是否在路由中注册过，如果没有，返回404错误
+   
+   4. 如果存在这个路由，那么执行路由类的 `handle` 方法，传入 `$request` 和 `$response`
+   
+   5. handle方法将实例化挂载在这个路由上的控制器，然后调用控制器中指定的方法
+   
+   6. 在这个方法中可以渲染输出，可以执行逻辑（反正MVC就对了）
+   
+   7. 这个方法返回一个数据，可以是字符串，可以是数组，可以是对象，如果是字符串，会被直接响应回去，如果是数组或者对象，会被响应成字符串
