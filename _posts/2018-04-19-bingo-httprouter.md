@@ -2,7 +2,7 @@
 layout:     post
 title:      "改造httprouter使其可以支持中间件"
 subtitle:    "Bingo框架的路由策略"
-author:     “silsuer”
+author:     "silsuer"
 header-img: "img/post-bg-kuaidi.jpg"
 tags:
     - Go
