@@ -215,3 +215,50 @@ nginx 配置文件:
    6. 在这个方法中可以渲染输出，可以执行逻辑（反正MVC就对了）
    
    7. 这个方法返回一个数据，可以是字符串，可以是数组，可以是对象，如果是字符串，会被直接响应回去，如果是数组或者对象，会被响应成字符串
+
+
+## 数据库
+
+  1. 继续沿用了 `Laravel` 内置的 ` Eloquent ORM` 来操作数据库，具体教程[看这里](https://laravel.com/docs/5.5/eloquent)
+  
+  2. 与在 `Laravel` 中使用只有一点点不同：
+  
+     1. 使用是要`use`的类不同，Laravel中使用门面，而我们要 `use Illuminate\Database\Capsule\Manager as DB;` 
+     
+     2. 引入并重命名为`DB`后,可以使用 `$res = DB::table('test')->get();` 调用数据库了，但是建表语句稍有不同:
+     
+        ```php
+            DB::schema()->create("aaa",function (Blueprint $table){
+                  $table->increments("id");
+                  $table->string("name");
+                  $table->integer("age");
+               });
+        ```
+        
+## 会话管理
+
+   1. 使用 `session` :
+      
+      有两种session存储方式:（分别设置SESSION_DRIVER为REDIS或ARRAY）
+      
+      一种是存储在redis中，此时规定使用3号库
+      
+      另一种是以全局数组的形式存储在$_SESSION中
+      
+      使用方式：
+      
+        ```php
+          session($request,$key);  // 读取一个session的值
+          session($request,$key,$value);  // 将设置$key的值为$value
+        ```
+   2. 使用 `cookie`:
+   
+       此处我没有做任何封装，使用 `swoole` 自带的就足够了，使用方式：
+       
+       ```php
+              // 与php的setCookie方法完全相同
+              $response->cookie($name, $value, time() +60);  
+              // 使用 rawCookie 可以忽略掉swoole底层对valuews的转码
+              $response->rawCookie($name, $value, time() + 60);  
+       ```
+        
