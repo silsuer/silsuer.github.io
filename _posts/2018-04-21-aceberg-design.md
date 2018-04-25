@@ -56,8 +56,25 @@ tags:
   
   5. 引入Redis，将常用数据缓存在Redis中，加快访问速度
   
-  5. 引入Swoole异步通讯框架，将标签、组件分别组织成一棵依赖树并保存在Redis或内存中
+  6. 引入Swoole异步通讯框架，将标签、组件分别组织成一棵依赖树并保存在Redis或内存中
   
+总体概述：
+
+整个项目可以具体抽象成，模型、插件、主题、组件、标签、宏 六大版块
+ 
+  1. 宏是在`Twig` 模版引擎中内置的一种模版操作，即将网页中可复用的代码块抽出来，放在自定义的宏中，然后在需要的页面引入，即可直接渲染出来
+   
+  2. 标签是在 `Twig` 模版引擎中内置的另一种模版操作，我们可以规定自己的标签格式，将其编译为原生的php代码并解释执行
+   
+  3. 组件是我们自己定义的一种类库集合，将一些特殊功能拆分出来，执行逻辑，可由标签进行调用
+   
+  4. 插件是由网页和组件、标签、宏等组合而成的功能性版块
+   
+  5. 模型是由模型插件提供的，实现对同类数据复用的功能版块
+   
+  6. 主题独立于插件和模型，后台主要由插件、模型拼接而成，而主题则为前台用户服务，负责前台页面的渲染以及其他功能，更换主题即更换前台页面
+   
+
 ## 目录结构
 
   ```go
@@ -262,3 +279,33 @@ nginx 配置文件:
               $response->rawCookie($name, $value, time() + 60);  
        ```
         
+## 配置文件解析：
+
+   ```json
+      {
+          "REDIS_HOST":"redis",                // redis主机地址
+          "REDIS_PORT":"6379",                 // redis端口号
+          "REDIS_DB":15,                       // 使用的Redis数据库
+      
+          "TEMP_PATH":"111",                   // 模版基目录
+      
+          "DB_DRIVER": "mysql",                // 数据库驱动
+          "DB_HOST" : "mysql",                 // 数据库主机地址
+          "DB_NAME": "default",                // 默认数据库名
+          "DB_USER_NAME":"root",               // 数据库用户名
+          "DB_PASSWORD":"root",                // 数据库密码
+          "DB_CHARSET":"utf8",                 // 数据库字符集
+          "DB_COLLATION":"utf8_unicode_ci",    // 数据库排序规则
+          "DB_TABLE_PREFIX":"ace",             // 数据表前缀
+      
+      
+          "SESSION_START":1,                   // 是否开启session
+          "SESSION_DRIVER":"REDIS",            // session驱动（REDIS/ARRAY）
+          "SESSION_LIFE_TIME":10,              // session过期时间
+          "SESSION_NAME":"AceSessId",          // 在客户端存储session键名的cookie名
+          
+          "AUTO_INSTALL":1                     // 当启动时扫描到有未安装的宏、标签、组件、插件、模型、主题，是否自动从官方库中下载安装
+      }
+      
+
+   ```
