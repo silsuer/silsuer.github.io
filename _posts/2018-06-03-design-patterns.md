@@ -6,6 +6,9 @@ header-img: "img/post-bg-2015.jpg"
 tags:
     - PHP
 ---
+
+> 参考链接: [http://laravelacademy.org/post/2465.html](http://laravelacademy.org/post/2465.html)
+
 # 创建型
 
 ## 抽象工厂模式
