@@ -1,13 +1,11 @@
-
 ---
 layout:     post
-title:      "常见设计模式"
+title:      "PHP常见设计模式"
 author:     "silsuer"
-header-img: "img/post-bg-re-vs-ng2.jpg"
+header-img: "img/post-bg-2015.jpg"
 tags:
-    - 设计模式
+    - PHP
 ---
-
 # 创建型
 
 ## 抽象工厂模式
