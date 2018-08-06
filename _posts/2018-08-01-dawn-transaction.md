@@ -1,3 +1,12 @@
+---
+layout:     post
+title:      "区块链Transaction代码解析"
+author:     "silsuer"
+header-img: "img/post-bg-2015.jpg"
+tags:
+    - Go
+---
+
 ## 交易记录
 
 ### 前言
@@ -227,6 +236,8 @@
    当然，UTXO模型当增大到一定程度之后也将出现性能问题，所以以太坊使用的是账户模型，以后再进行讨论。
    
 > 其余的就是send命令了，博客讲的很详细。
+
+
    
    
 
