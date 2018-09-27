@@ -2,7 +2,7 @@
 layout:     post
 title:      "TWIG源码解析"
 author:     "silsuer"
-header-img: "img/post-bg-kuaidi.jpg"
+header-img: "img/post-yanyu.jpg"
 ---
 
 # TWIG 源码解析
@@ -276,10 +276,10 @@ header-img: "img/post-bg-kuaidi.jpg"
    ```
        const EOF_TYPE = -1;                  // 模版末尾
        const TEXT_TYPE = 0;                  // 文本（不在左右定界符之间）
-       const BLOCK_START_TYPE = 1;           // 块语句开始（ {% ）
-       const VAR_START_TYPE = 2;             // 变量语句  ( {{ ) 
-       const BLOCK_END_TYPE = 3;             // 块语句结束 ( %} )
-       const VAR_END_TYPE = 4;               // 变量语句结束 ( }} )
+       const BLOCK_START_TYPE = 1;           // 块语句开始
+       const VAR_START_TYPE = 2;             // 变量语句   
+       const BLOCK_END_TYPE = 3;             // 块语句结束
+       const VAR_END_TYPE = 4;               // 变量语句结束
        const NAME_TYPE = 5;                  // 名称类型(有可能是变量名、标记名、函数名等)
        const NUMBER_TYPE = 6;                // 数字类型
        const STRING_TYPE = 7;                // 字符串类型
