@@ -3,6 +3,8 @@ layout:     post
 title:      "golang设计模式之单例模式"
 author:     "silsuer"
 header-img: "img/post-yemu.jpg"
+tags:
+    - 设计模式
 ---
 
 # 单例模式
